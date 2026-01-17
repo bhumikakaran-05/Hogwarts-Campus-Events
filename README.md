@@ -96,7 +96,7 @@ Download .ics file (works in Apple/Outlook calendar)
 ✅ Responsive UI Works smoothly on mobile and desktop.
 
 
-
+---
 
 🧙‍♂️ Theme & UI Design
 
@@ -115,7 +115,7 @@ Cinzel (headings)
 Cormorant Garamond (body)
 
 
-
+---
 
 🛠️ Tech Stack
 
@@ -137,7 +137,7 @@ Reminder preferences
 
 > 🚫 No backend, database, or real-time integrations (Frontend-only).
 
-
+---
 
 📂 Project Structure
 
@@ -145,7 +145,7 @@ hogwarts-campus-events/
 │── index.html
 │── README.md
 
-
+---
 
 🚀 How to Run Locally
 
@@ -168,7 +168,7 @@ hogwarts-campus-events/
 
 3. Right-click index.html → Open with Live Server
 
-
+---
 
 📸 Screens Included (Suggested)
 
@@ -179,6 +179,7 @@ hogwarts-campus-events/
 ✅ Event Details Modal
 ✅ Add to Calendar Options
 
+---
 
 💡 Future Improvements
 
@@ -192,7 +193,7 @@ Admin panel for clubs to upload events
 
 Multi-page routing for better navigation
 
-
+---
 
 👤 Author
 
@@ -200,6 +201,7 @@ BHumika Karan(IT)
 Chaitanya Parab(AI)
 BTech AI, Usha Mittal Institute of Technology (UMIT), SNDT University
 
+---
 
 📜 License
 
