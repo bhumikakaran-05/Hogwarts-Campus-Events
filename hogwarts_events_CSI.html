@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts Campus Events</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+
+        body{
+            background:#0B0B12;
+            color:#EDE6D6;
+            font-family:'Cormorant Garamond',serif;
+            line-height:1.6
+        }
+
+        .navbar{
+            position:sticky;top:0;
+            background:rgba(20,20,36,.95);
+            backdrop-filter:blur(10px);
+            border-bottom:1px solid #3A3A4F;
+            padding:1rem 2rem;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            z-index:1000
+        }
+
+        .logo{
+            font-family:'Cinzel',serif;
+            font-size:1.5rem;
+            color:#F5D76E;
+            font-weight:700
+        }
+
+        .tagline{
+            font-size:.95rem;
+            color:#AFA89A;
+            margin-top:.2rem
+        }
+
+        .nav-right{
+            color:#EDE6D6;
+            font-size:.9rem
+        }
+
+        .nav-actions{
+            display:flex;
+            align-items:center;
+            gap:.7rem;
+            flex-wrap:wrap;
+        }
+
+        .pill-btn{
+            padding:.55rem 1rem;
+            border-radius:999px;
+            border:1px solid #3A3A4F;
+            background:#141424;
+            color:#EDE6D6;
+            cursor:pointer;
+            font-weight:600;
+            transition:all .3s ease;
+            font-family:'Cormorant Garamond',serif;
+        }
+        .pill-btn:hover{
+            border-color:#F5D76E;
+            box-shadow:0 0 15px rgba(245,215,110,.15);
+        }
+        .pill-btn.active{
+            background:rgba(245,215,110,.15);
+            color:#F5D76E;
+        }
+
+        .hero{
+            text-align:center;
+            padding:4rem 2rem 3rem;
+            background:linear-gradient(180deg, rgba(20,20,36,.8) 0%, rgba(11,11,18,.6) 100%)
+        }
+
+        .hero h1{
+            font-family:'Cinzel',serif;
+            font-size:2.5rem;
+            color:#F5D76E;
+            margin-bottom:1rem;
+            text-shadow:0 0 20px rgba(245,215,110,.3)
+        }
+
+        .hero p{font-size:1.2rem;color:#EDE6D6;margin-bottom:2rem}
+
+        .featured-banner{
+            display:inline-block;
+            background:linear-gradient(135deg, rgba(127,255,212,.1), rgba(245,215,110,.1));
+            border:1px solid #3A3A4F;
+            border-radius:8px;
+            padding:.75rem 1.5rem;
+            color:#7FFFD4;
+            font-size:1rem;
+            box-shadow:0 0 15px rgba(127,255,212,.2)
+        }
+
+        .filters-section{
+            max-width:1200px;
+            margin:0 auto;
+            padding:2rem
+        }
+
+        .search-bar{
+            width:100%;
+            padding:1rem 1.5rem;
+            background:#141424;
+            border:1px solid #3A3A4F;
+            border-radius:8px;
+            color:#EDE6D6;
+            font-family:'Cormorant Garamond',serif;
+            font-size:1rem;
+            margin-bottom:1.5rem;
+            transition:all .3s ease
+        }
+
+        .search-bar:focus{
+            outline:none;
+            border-color:#F5D76E;
+            box-shadow:0 0 15px rgba(245,215,110,.2)
+        }
+
+        .search-bar::placeholder{color:#AFA89A}
+
+        .filter-row{
+            display:flex;
+            gap:1rem;
+            margin-bottom:1rem;
+            flex-wrap:wrap
+        }
+
+        .filter-select{
+            flex:1;min-width:200px;
+            padding:.75rem 1rem;
+            background:#141424;
+            border:1px solid #3A3A4F;
+            border-radius:8px;
+            color:#EDE6D6;
+            font-family:'Cormorant Garamond',serif;
+            font-size:1rem;
+            cursor:pointer;
+            transition:all .3s ease
+        }
+
+        .filter-select:focus{
+            outline:none;
+            border-color:#F5D76E
+        }
+
+        .mini-row{
+            display:flex;
+            gap:1rem;
+            flex-wrap:wrap;
+            align-items:center;
+            margin-bottom:1.5rem;
+        }
+
+        .sort-wrap{
+            flex:1;
+            min-width:220px;
+        }
+
+        .date-chips{
+            display:flex;
+            gap:.75rem;
+            flex-wrap:wrap
+        }
+
+        .chip{
+            padding:.5rem 1.25rem;
+            background:#141424;
+            border:1px solid #3A3A4F;
+            border-radius:20px;
+            color:#EDE6D6;
+            cursor:pointer;
+            transition:all .3s ease;
+            font-size:.95rem
+        }
+
+        .chip:hover,.chip.active{
+            background:#F5D76E;
+            color:#0B0B12;
+            border-color:#F5D76E
+        }
+
+        .results-info{
+            max-width:1200px;
+            margin:0 auto;
+            padding:0 2rem;
+            color:#AFA89A;
+            font-size:1rem;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:1rem;
+            flex-wrap:wrap;
+        }
+
+        .events-grid{
+            max-width:1200px;
+            margin:0 auto;
+            padding:2rem;
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+            gap:2rem
+        }
+
+        .event-card{
+            background:linear-gradient(135deg, rgba(20,20,36,.9), rgba(30,30,48,.7));
+            border:1px solid #3A3A4F;
+            border-radius:12px;
+            padding:1.5rem;
+            transition:all .4s ease;
+            position:relative;
+            overflow:hidden
+        }
+
+        .event-card::before{
+            content:'';
+            position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;
+            background:linear-gradient(135deg, #F5D76E, #7FFFD4);
+            border-radius:12px;
+            opacity:0;
+            transition:opacity .4s ease;
+            z-index:-1
+        }
+
+        .event-card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 10px 30px rgba(245,215,110,.2)
+        }
+
+        .event-card:hover::before{opacity:.3}
+
+        .top-row{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:1rem;
+        }
+
+        .organizer{
+            color:#AFA89A;
+            font-size:.85rem;
+            margin-bottom:.5rem;
+            text-transform:uppercase;
+            letter-spacing:1px
+        }
+
+        .event-title{
+            font-family:'Cinzel',serif;
+            font-size:1.3rem;
+            color:#F5D76E;
+            margin-bottom:.75rem;
+            font-weight:600
+        }
+
+        .badges-row{
+            display:flex;
+            flex-wrap:wrap;
+            gap:.5rem;
+            margin-bottom:1rem;
+        }
+
+        .category-badge{
+            display:inline-block;
+            padding:.3rem .8rem;
+            background:rgba(127,255,212,.15);
+            border:1px solid #7FFFD4;
+            border-radius:6px;
+            color:#7FFFD4;
+            font-size:.8rem;
+            text-shadow:0 0 10px rgba(127,255,212,.5)
+        }
+
+        .deadline-badge{
+            display:inline-block;
+            padding:.3rem .8rem;
+            border:1px solid #3A3A4F;
+            border-radius:6px;
+            font-size:.8rem;
+            font-weight:600;
+        }
+        .deadline-open{ color:#F5D76E; background:rgba(245,215,110,.12); }
+        .deadline-soon{ color:#7FFFD4; background:rgba(127,255,212,.10); }
+        .deadline-closed{ color:#ff6b6b; background:rgba(255,80,80,.12); }
+
+        .save-btn{
+            border:1px solid #3A3A4F;
+            background:rgba(255,255,255,.03);
+            color:#AFA89A;
+            border-radius:10px;
+            padding:.4rem .7rem;
+            cursor:pointer;
+            transition:all .3s ease;
+            font-size:1.1rem;
+            line-height:1;
+        }
+        .save-btn:hover{
+            border-color:#F5D76E;
+            color:#F5D76E;
+        }
+        .save-btn.saved{
+            color:#F5D76E;
+            border-color:#F5D76E;
+            background:rgba(245,215,110,.08);
+        }
+
+        .event-meta{
+            margin:1rem 0;
+            color:#EDE6D6;
+            font-size:.95rem
+        }
+
+        .meta-item{margin-bottom:.4rem}
+
+        .tags{
+            display:flex;
+            gap:.5rem;
+            flex-wrap:wrap;
+            margin:1rem 0
+        }
+
+        .tag{
+            padding:.25rem .75rem;
+            background:rgba(245,215,110,.1);
+            border:1px solid #3A3A4F;
+            border-radius:4px;
+            color:#AFA89A;
+            font-size:.8rem
+        }
+
+        .actions-row{
+            display:flex;
+            gap:.7rem;
+            align-items:center;
+            margin-top:.8rem;
+            flex-wrap:wrap;
+        }
+
+        .reminder-select{
+            flex:1;
+            min-width:190px;
+            padding:.65rem .9rem;
+            background:#141424;
+            border:1px solid #3A3A4F;
+            border-radius:8px;
+            color:#EDE6D6;
+            cursor:pointer;
+            transition:all .3s ease;
+            font-family:'Cormorant Garamond',serif;
+        }
+
+        .mini-action-btn{
+            padding:.65rem .95rem;
+            border-radius:8px;
+            border:1px solid #3A3A4F;
+            background:rgba(255,255,255,.03);
+            color:#F5D76E;
+            cursor:pointer;
+            font-weight:600;
+            transition:all .3s ease;
+            font-family:'Cormorant Garamond',serif;
+        }
+        .mini-action-btn:hover{
+            border-color:#F5D76E;
+            box-shadow:0 0 15px rgba(245,215,110,.15);
+        }
+
+        .view-details-btn{
+            width:100%;
+            padding:.75rem;
+            background:#F5D76E;
+            color:#0B0B12;
+            border:none;
+            border-radius:8px;
+            font-family:'Cinzel',serif;
+            font-size:1rem;
+            font-weight:600;
+            cursor:pointer;
+            transition:all .3s ease;
+            margin-top:1rem
+        }
+
+        .view-details-btn:hover{
+            background:#FFD700;
+            transform:scale(1.02)
+        }
+
+        .modal{
+            display:none;
+            position:fixed;top:0;left:0;
+            width:100%;height:100%;
+            background:rgba(0,0,0,.85);
+            z-index:2000;
+            align-items:center;
+            justify-content:center;
+            padding:2rem
+        }
+
+        .modal.active{display:flex}
+
+        .modal-content{
+            background:#141424;
+            border:2px solid #3A3A4F;
+            border-radius:12px;
+            max-width:650px;
+            width:100%;
+            max-height:90vh;
+            overflow-y:auto;
+            padding:2rem;
+            position:relative;
+            box-shadow:0 0 40px rgba(245,215,110,.3)
+        }
+
+        .close-btn{
+            position:absolute;top:1rem;right:1rem;
+            background:none;border:none;
+            color:#AFA89A;
+            font-size:2rem;
+            cursor:pointer;
+            transition:color .3s ease
+        }
+
+        .close-btn:hover{color:#F5D76E}
+
+        .modal-title{
+            font-family:'Cinzel',serif;
+            font-size:1.8rem;
+            color:#F5D76E;
+            margin-bottom:1rem;
+            padding-right:2rem
+        }
+
+        .modal-meta{
+            margin:1.2rem 0;
+            color:#EDE6D6
+        }
+
+        .modal-description{
+            color:#EDE6D6;
+            line-height:1.8;
+            margin:1.2rem 0
+        }
+
+        .modal-actions{
+            display:grid;
+            grid-template-columns:repeat(1, 1fr);
+            gap:.7rem;
+            margin-top:1rem;
+        }
+
+        .modal-actions a,
+        .modal-actions button{
+            padding:1rem;
+            border-radius:10px;
+            border:1px solid #3A3A4F;
+            cursor:pointer;
+            font-weight:700;
+            font-family:'Cinzel',serif;
+            transition:all .3s ease;
+            text-decoration:none;
+            text-align:center;
+        }
+
+        .btn-gcal{
+            background:rgba(127,255,212,.10);
+            color:#7FFFD4;
+        }
+        .btn-ics{
+            background:rgba(245,215,110,.12);
+            color:#F5D76E;
+        }
+        .btn-register{
+            background:#F5D76E;
+            color:#0B0B12;
+            border:none;
+        }
+        .btn-register:hover{
+            background:#FFD700;
+        }
+
+        .btn-copy{
+            background:rgba(255,255,255,.03);
+            color:#F5D76E;
+        }
+
+        footer{
+            text-align:center;
+            padding:2rem;
+            background:#141424;
+            border-top:1px solid #3A3A4F;
+            color:#AFA89A;
+            margin-top:3rem
+        }
+
+        .no-results{
+            text-align:center;
+            padding:4rem 2rem;
+            color:#AFA89A;
+            font-size:1.2rem;
+            grid-column:1/-1;
+        }
+
+        @media (max-width:768px){
+            .hero h1{font-size:1.8rem}
+            .events-grid{grid-template-columns:1fr}
+            .filter-row{flex-direction:column}
+            .navbar{flex-direction:column;gap:.6rem;text-align:center}
+            .nav-actions{justify-content:center}
+            .results-info{padding:0 2rem}
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div>
+            <div class="logo">Hogwarts Campus Events</div>
+            <div class="tagline">Discover magical events in your campus ✨</div>
+        </div>
+
+        <div class="nav-actions">
+            <button class="pill-btn active" id="allBtn">All Events</button>
+            <button class="pill-btn" id="wishBtn">Wishlist (<span id="wishCount">0</span>)</button>
+        </div>
+
+        <div class="nav-right">UMIT • SNDT University</div>
+    </nav>
+
+    <section class="hero">
+        <h1>Explore Upcoming Campus Events ✨</h1>
+        <p>Workshops, talks, competitions & club activities — all in one place.</p>
+        <div class="featured-banner" id="featuredBanner">✨ Featured Event of the Day</div>
+    </section>
+
+    <section class="filters-section">
+        <input type="text" class="search-bar" id="searchBar" placeholder="Search for magical events…">
+
+        <div class="filter-row">
+            <select class="filter-select" id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="Tech">Tech</option>
+                <option value="Entrepreneurship">Entrepreneurship</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Career">Career</option>
+                <option value="Sports">Sports</option>
+                <option value="Competitions">Competitions</option>
+                <option value="Coding">Coding</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Design">Design</option>
+                <option value="Innovation">Innovation</option>
+            </select>
+
+            <select class="filter-select" id="clubFilter">
+                <option value="all">All Clubs</option>
+                <option value="E-Cell">E-Cell</option>
+                <option value="CSI">CSI</option>
+                <option value="ACM">ACM</option>
+                <option value="IIC">IIC</option>
+                <option value="Drone Club">Drone Club</option>
+                <option value="Cultural Committee">Cultural Committee</option>
+                <option value="Training & Placement">Training & Placement</option>
+                <option value="Gryffindor Club">Gryffindor Club</option>
+                <option value="Ravenclaw Circle">Ravenclaw Circle</option>
+                <option value="Hufflepuff Hub">Hufflepuff Hub</option>
+                <option value="Slytherin Society">Slytherin Society</option>
+                <option value="Innovari">Innovari</option>
+            </select>
+        </div>
+
+        <div class="mini-row">
+            <div class="sort-wrap">
+                <select class="filter-select" id="sortFilter">
+                    <option value="soonest">Sort: Soonest</option>
+                    <option value="popular">Sort: Popular</option>
+                    <option value="recent">Sort: Recently Added</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="date-chips">
+            <div class="chip active" data-filter="all">All</div>
+            <div class="chip" data-filter="today">Today</div>
+            <div class="chip" data-filter="week">This Week</div>
+            <div class="chip" data-filter="month">This Month</div>
+        </div>
+    </section>
+
+    <div class="results-info">
+        <div id="resultsCount">Showing 0 events</div>
+        <div id="filterSummary">Filters: All • All • All</div>
+    </div>
+
+    <section class="events-grid" id="eventsGrid"></section>
+
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+
+            <div class="top-row">
+                <div>
+                    <h2 class="modal-title" id="modalTitle"></h2>
+                    <div class="organizer" id="modalOrganizer"></div>
+                    <div class="badges-row">
+                        <div class="category-badge" id="modalCategory"></div>
+                        <div class="deadline-badge" id="modalDeadlineBadge"></div>
+                    </div>
+                </div>
+
+                <button class="save-btn" id="modalSaveBtn" title="Save to Wishlist">☆</button>
+            </div>
+
+            <div class="modal-meta" id="modalMeta"></div>
+            <div class="modal-description" id="modalDescription"></div>
+            <div class="tags" id="modalTags"></div>
+
+            <div class="modal-actions">
+                <a href="#" target="_blank" class="btn-gcal" id="gcalBtn">Add to Google Calendar</a>
+                <button class="btn-ics" id="icsBtn">Download .ics</button>
+                <button class="btn-copy" id="copyBtn">Copy Event Details</button>
+                <button class="btn-register btn-register" id="registerBtn">Register Now (UI)</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Hogwarts Campus Events • Frontend Prototype Only
+    </footer>
+
+    <script>
+        /* ------------------------------
+           Local Storage Keys
+        ------------------------------ */
+        const LS_WISHLIST = "hogwarts_wishlist";
+        const LS_REMINDERS = "hogwarts_reminders";
+
+        /* ------------------------------
+           Events Data (Added deadline/popularity/createdAt)
+        ------------------------------ */
+        const events = [
+            {
+                id: 1,
+                title: "Spell Coding Night: Python Enchantments",
+                organizer: "Innovari",
+                category: "Tech",
+                date: "Jan 20, 2026",
+                time: "6:00 PM - 9:00 PM",
+                location: "Computer Lab 3",
+                deadline: "Jan 19, 2026",
+                popularity: 92,
+                createdAt: "Jan 10, 2026",
+                description: "Join us for an enchanting evening of Python programming! Learn to cast powerful code spells and create magical applications. Perfect for beginners and intermediate wizards alike.",
+                tags: ["Python", "Coding", "Workshop"],
+                dateObj: new Date("2026-01-20")
+            },
+            {
+                id: 2,
+                title: "Startup Day Pitch Challenge",
+                organizer: "E-Cell",
+                category: "Entrepreneurship",
+                date: "Jan 22, 2026",
+                time: "10:00 AM - 4:00 PM",
+                location: "Main Auditorium",
+                deadline: "Jan 21, 2026",
+                popularity: 98,
+                createdAt: "Jan 12, 2026",
+                description: "Present your magical startup ideas to a panel of industry wizards! Win prizes, mentorship, and potential funding for your entrepreneurial journey.",
+                tags: ["Startup", "Pitch", "Competition", "Funding"],
+                dateObj: new Date("2026-01-22")
+            },
+            {
+                id: 3,
+                title: "AI & Machine Learning Workshop",
+                organizer: "Innovari",
+                category: "Tech",
+                date: "Jan 18, 2026",
+                time: "2:00 PM - 5:00 PM",
+                location: "Innovation Center",
+                deadline: "Jan 18, 2026",
+                popularity: 80,
+                createdAt: "Jan 08, 2026",
+                description: "Dive into the mystical world of Artificial Intelligence and Machine Learning. Hands-on session covering neural networks, deep learning, and practical applications.",
+                tags: ["AI", "ML", "Workshop", "Hands-on"],
+                dateObj: new Date("2026-01-18")
+            },
+            {
+                id: 4,
+                title: "Quidditch Tryouts 2026",
+                organizer: "Gryffindor Club",
+                category: "Sports",
+                date: "Jan 25, 2026",
+                time: "4:00 PM - 6:00 PM",
+                location: "Sports Ground",
+                deadline: "Jan 24, 2026",
+                popularity: 75,
+                createdAt: "Jan 11, 2026",
+                description: "Show your flying skills! Open tryouts for all positions on the Quidditch team. Seekers, Beaters, Chasers, and Keepers all welcome!",
+                tags: ["Sports", "Quidditch", "Tryouts"],
+                dateObj: new Date("2026-01-25")
+            },
+            {
+                id: 5,
+                title: "Dark Arts Debate Championship",
+                organizer: "Ravenclaw Circle",
+                category: "Cultural",
+                date: "Jan 28, 2026",
+                time: "3:00 PM - 6:00 PM",
+                location: "Debate Hall",
+                deadline: "Jan 27, 2026",
+                popularity: 88,
+                createdAt: "Jan 09, 2026",
+                description: "Engage in intellectual duels! A debate competition covering contemporary topics, ethical dilemmas, and philosophical questions. Sharpen your argumentative charms.",
+                tags: ["Debate", "Competition", "Public Speaking"],
+                dateObj: new Date("2026-01-28")
+            },
+            {
+                id: 6,
+                title: "Drone Demo & Lab Introduction",
+                organizer: "Drone Club",
+                category: "Tech",
+                date: "Jan 19, 2026",
+                time: "11:00 AM - 1:00 PM",
+                location: "Engineering Block",
+                deadline: "Jan 18, 2026",
+                popularity: 85,
+                createdAt: "Jan 14, 2026",
+                description: "Experience the magic of aerial robotics! Live drone demonstrations, lab tour, and hands-on flying sessions for interested students.",
+                tags: ["Drones", "Robotics", "Demo", "Technology"],
+                dateObj: new Date("2026-01-19")
+            },
+            {
+                id: 7,
+                title: "Career Divination Workshop",
+                organizer: "Training & Placement",
+                category: "Career",
+                date: "Jan 23, 2026",
+                time: "9:00 AM - 12:00 PM",
+                location: "Conference Room A",
+                deadline: "Jan 22, 2026",
+                popularity: 70,
+                createdAt: "Jan 08, 2026",
+                description: "Unveil your career path! Resume building, interview preparation, and career counseling session with industry experts and placement officers.",
+                tags: ["Career", "Resume", "Interview", "Placement"],
+                dateObj: new Date("2026-01-23")
+            },
+            {
+                id: 8,
+                title: "Potion Lab Workshop: Chemistry Magic",
+                organizer: "Hufflepuff Hub",
+                category: "Tech",
+                date: "Jan 21, 2026",
+                time: "1:00 PM - 4:00 PM",
+                location: "Chemistry Lab 2",
+                deadline: "Jan 20, 2026",
+                popularity: 60,
+                createdAt: "Jan 07, 2026",
+                description: "Brew your way to knowledge! Practical chemistry workshop featuring exciting experiments, compound creation, and real-world applications.",
+                tags: ["Chemistry", "Lab", "Experiments", "Science"],
+                dateObj: new Date("2026-01-21")
+            },
+            {
+                id: 9,
+                title: "Enchanted Evening: Cultural Fest",
+                organizer: "Cultural Committee",
+                category: "Cultural",
+                date: "Jan 30, 2026",
+                time: "5:00 PM - 10:00 PM",
+                location: "Open Amphitheater",
+                deadline: "Jan 29, 2026",
+                popularity: 90,
+                createdAt: "Jan 09, 2026",
+                description: "A magical celebration of arts and culture! Dance, music, drama, and poetry performances. Showcase your talents and enjoy the creative brilliance of fellow students.",
+                tags: ["Cultural", "Performance", "Arts", "Music"],
+                dateObj: new Date("2026-01-30")
+            },
+            {
+                id: 10,
+                title: "Web3 & Blockchain Masterclass",
+                organizer: "Slytherin Society",
+                category: "Tech",
+                date: "Jan 24, 2026",
+                time: "3:00 PM - 6:00 PM",
+                location: "Seminar Hall B",
+                deadline: "Jan 23, 2026",
+                popularity: 95,
+                createdAt: "Jan 13, 2026",
+                description: "Enter the decentralized realm! Learn about blockchain technology, cryptocurrencies, smart contracts, and the future of Web3.",
+                tags: ["Blockchain", "Web3", "Crypto", "Workshop"],
+                dateObj: new Date("2026-01-24")
+            },
+            {
+                id: 11,
+                title: "Hackathon: Code & Conquer",
+                organizer: "Innovari",
+                category: "Competitions",
+                date: "Jan 26, 2026",
+                time: "9:00 AM - 9:00 PM",
+                location: "IT Building",
+                deadline: "Jan 25, 2026",
+                popularity: 97,
+                createdAt: "Jan 13, 2026",
+                description: "12-hour coding marathon! Build innovative solutions, compete with brilliant minds, and win exciting prizes. All skill levels welcome!",
+                tags: ["Hackathon", "Coding", "Competition", "Team Event"],
+                dateObj: new Date("2026-01-26")
+            },
+            {
+                id: 12,
+                title: "Marketing Magic Seminar",
+                organizer: "E-Cell",
+                category: "Entrepreneurship",
+                date: "Jan 27, 2026",
+                time: "2:00 PM - 5:00 PM",
+                location: "Business Hall",
+                deadline: "Jan 26, 2026",
+                popularity: 82,
+                createdAt: "Jan 11, 2026",
+                description: "Master the art of marketing enchantment! Digital marketing strategies, brand building, social media magic, and growth hacking techniques.",
+                tags: ["Marketing", "Digital", "Branding", "Seminar"],
+                dateObj: new Date("2026-01-27")
+            },
+            {
+                id: 13,
+                title: "CSI CodeSprint: DSA Speed Challenge",
+                organizer: "CSI",
+                category: "Coding",
+                date: "Jan 28, 2026",
+                time: "11:00 AM - 1:00 PM",
+                location: "Computer Lab 1",
+                deadline: "Jan 27, 2026",
+                popularity: 78,
+                createdAt: "Jan 15, 2026",
+                description: "Fast-paced DSA contest with leaderboard, problem-solving rounds, and fun challenges.",
+                tags: ["DSA", "Contest", "Coding", "CSI"],
+                dateObj: new Date("2026-01-28")
+            },
+            {
+                id: 14,
+                title: "CSI Web Dev Workshop: Build a Portfolio",
+                organizer: "CSI",
+                category: "Workshop",
+                date: "Jan 29, 2026",
+                time: "2:30 PM - 5:30 PM",
+                location: "Seminar Hall",
+                deadline: "Jan 28, 2026",
+                popularity: 83,
+                createdAt: "Jan 16, 2026",
+                description: "Learn HTML, CSS, JavaScript and build a professional portfolio website with modern UI.",
+                tags: ["WebDev", "HTML", "CSS", "Workshop"],
+                dateObj: new Date("2026-01-29")
+            },
+            {
+                id: 15,
+                title: "ACM Competitive Programming Practice Session",
+                organizer: "ACM",
+                category: "Coding",
+                date: "Jan 30, 2026",
+                time: "1:00 PM - 3:00 PM",
+                location: "Computer Lab 2",
+                deadline: "Jan 29, 2026",
+                popularity: 76,
+                createdAt: "Jan 18, 2026",
+                description: "A guided CP session with problem discussion, tricks, and real-time solving strategies.",
+                tags: ["CP", "ProblemSolving", "ACM", "Coding"],
+                dateObj: new Date("2026-01-30")
+            },
+            {
+                id: 16,
+                title: "ACM Tech Talk: Roadmap to Internships",
+                organizer: "ACM",
+                category: "Career",
+                date: "Feb 01, 2026",
+                time: "4:00 PM - 5:30 PM",
+                location: "Auditorium",
+                deadline: "Jan 31, 2026",
+                popularity: 85,
+                createdAt: "Jan 20, 2026",
+                description: "Learn how to prepare for internships, build projects, and create a strong resume & LinkedIn profile.",
+                tags: ["Internships", "Resume", "TechTalk", "ACM"],
+                dateObj: new Date("2026-02-01")
+            },
+            {
+                id: 17,
+                title: "IIC Innovation Expo: Project Showcase",
+                organizer: "IIC",
+                category: "Innovation",
+                date: "Feb 03, 2026",
+                time: "10:00 AM - 2:00 PM",
+                location: "Innovation Hub",
+                deadline: "Feb 02, 2026",
+                popularity: 90,
+                createdAt: "Jan 21, 2026",
+                description: "Showcase innovative prototypes and student ideas. Explore startups, research, and problem-solving projects.",
+                tags: ["Innovation", "Expo", "Prototype", "IIC"],
+                dateObj: new Date("2026-02-03")
+            },
+            {
+                id: 18,
+                title: "IIC Ideathon: Solve a Campus Problem",
+                organizer: "IIC",
+                category: "Entrepreneurship",
+                date: "Feb 05, 2026",
+                time: "12:00 PM - 4:00 PM",
+                location: "Conference Room",
+                deadline: "Feb 04, 2026",
+                popularity: 88,
+                createdAt: "Jan 21, 2026",
+                description: "Team-based ideathon where you solve real campus problems with innovative solutions and pitch to mentors.",
+                tags: ["Ideathon", "Pitch", "Innovation", "IIC"],
+                dateObj: new Date("2026-02-05")
+            },
+            {
+                id: 19,
+                title: "ACM UI/UX Sprint: Design Challenge",
+                organizer: "ACM",
+                category: "Design",
+                date: "Feb 06, 2026",
+                time: "2:00 PM - 4:00 PM",
+                location: "Design Studio",
+                deadline: "Feb 05, 2026",
+                popularity: 74,
+                createdAt: "Jan 22, 2026",
+                description: "A UI/UX challenge to redesign a campus app screen with better accessibility and modern layouts.",
+                tags: ["UIUX", "Design", "Sprint", "ACM"],
+                dateObj: new Date("2026-02-06")
+            },
+            {
+                id: 20,
+                title: "CSI Git & GitHub Bootcamp",
+                organizer: "CSI",
+                category: "Workshop",
+                date: "Feb 07, 2026",
+                time: "11:30 AM - 1:30 PM",
+                location: "Computer Lab 3",
+                deadline: "Feb 06, 2026",
+                popularity: 86,
+                createdAt: "Jan 22, 2026",
+                description: "Learn Git basics, GitHub workflow, branching, commits, and how to collaborate in hackathons.",
+                tags: ["Git", "GitHub", "VersionControl", "CSI"],
+                dateObj: new Date("2026-02-07")
+            }
+        ];
+
+        /* ------------------------------
+           App State
+        ------------------------------ */
+        let filteredEvents = [...events];
+        let currentDateFilter = 'all';
+        let showWishlistOnly = false;
+
+        let wishlist = JSON.parse(localStorage.getItem(LS_WISHLIST)) || [];
+        let reminders = JSON.parse(localStorage.getItem(LS_REMINDERS)) || {};
+
+        function updateWishlistCount(){
+            document.getElementById("wishCount").textContent = wishlist.length;
+        }
+
+        function formatShortDate(dateStr){
+            // input like "Jan 20, 2026" -> keep as is
+            return dateStr;
+        }
+
+        function parseDate(dateStr){
+            // dateStr: "Jan 20, 2026"
+            return new Date(dateStr);
+        }
+
+        function daysBetween(a,b){
+            const da = new Date(a); da.setHours(0,0,0,0);
+            const db = new Date(b); db.setHours(0,0,0,0);
+            return Math.round((db-da)/(1000*60*60*24));
+        }
+
+        function getDeadlineStatus(deadlineStr){
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const deadline = parseDate(deadlineStr);
+            const diff = daysBetween(today, deadline);
+
+            if(diff < 0){
+                return {label:"Closed ❌", cls:"deadline-closed"};
+            }else if(diff <= 1){
+                return {label:"Closing Soon ⚠️", cls:"deadline-soon"};
+            }
+            return {label:"Open ✅", cls:"deadline-open"};
+        }
+
+        function buildGoogleCalendarUrl(event){
+            // fixed time range: 2 hours
+            const start = new Date(event.dateObj);
+            start.setHours(10,0,0,0);
+            const end = new Date(start);
+            end.setHours(start.getHours()+2);
+
+            const toGCal = (d)=> d.toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";
+
+            const params = new URLSearchParams({
+                action:"TEMPLATE",
+                text:event.title,
+                details:`${event.description}\n\nOrganizer: ${event.organizer}\nCategory: ${event.category}`,
+                location:event.location,
+                dates:`${toGCal(start)}/${toGCal(end)}`
+            });
+
+            return `https://calendar.google.com/calendar/render?${params.toString()}`;
+        }
+
+        function downloadICS(event){
+            const dtStamp = new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";
+            const start = new Date(event.dateObj);
+            start.setHours(10,0,0,0);
+            const end = new Date(start);
+            end.setHours(start.getHours()+2);
+
+            const toICS = (d)=> d.toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";
+
+            const ics = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Hogwarts Campus Events//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:${event.id}-${dtStamp}@hogwarts-campus-events
+DTSTAMP:${dtStamp}
+DTSTART:${toICS(start)}
+DTEND:${toICS(end)}
+SUMMARY:${event.title}
+DESCRIPTION:${event.description.replace(/\n/g," ")} Organizer: ${event.organizer}
+LOCATION:${event.location}
+END:VEVENT
+END:VCALENDAR
+            `.trim();
+
+            const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${event.title.replaceAll(" ","_")}.ics`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyEventDetails(event){
+            const text = `✨ Hogwarts Campus Event ✨
+${event.title}
+📅 ${event.date}
+🕐 ${event.time}
+📍 ${event.location}
+🏛️ ${event.organizer}
+Category: ${event.category}
+Deadline: ${event.deadline}`;
+            navigator.clipboard.writeText(text)
+                .then(()=> alert("Event copied ✅ Paste it anywhere!"))
+                .catch(()=> alert("Copy failed ❌"));
+        }
+
+        function toggleSave(eventId){
+            if(wishlist.includes(eventId)){
+                wishlist = wishlist.filter(id => id !== eventId);
+            }else{
+                wishlist.push(eventId);
+            }
+            localStorage.setItem(LS_WISHLIST, JSON.stringify(wishlist));
+            updateWishlistCount();
+            filterEvents();
+        }
+
+        function setReminder(eventId, value){
+            if(value === "none"){
+                delete reminders[eventId];
+            }else{
+                reminders[eventId] = value;
+            }
+            localStorage.setItem(LS_REMINDERS, JSON.stringify(reminders));
+        }
+
+        function updateFeaturedBanner(){
+            // choose most popular event as featured
+            const featured = [...events].sort((a,b)=> b.popularity - a.popularity)[0];
+            const banner = document.getElementById("featuredBanner");
+            banner.textContent = `✨ Featured: ${featured.title}`;
+        }
+
+        function renderEvents() {
+            const grid = document.getElementById('eventsGrid');
+            const resultsCount = document.getElementById("resultsCount");
+
+            resultsCount.textContent = `Showing ${filteredEvents.length} event(s)`;
+
+            if (filteredEvents.length === 0) {
+                grid.innerHTML = '<div class="no-results">No magical events found. Try adjusting your filters!</div>';
+                return;
+            }
+
+            grid.innerHTML = filteredEvents.map(event => {
+                const status = getDeadlineStatus(event.deadline);
+                const saved = wishlist.includes(event.id);
+
+                const reminderValue = reminders[event.id] || "none";
+
+                return `
+                <div class="event-card" data-id="${event.id}">
+                    <div class="top-row">
+                        <div>
+                            <div class="organizer">${event.organizer}</div>
+                            <h3 class="event-title">${event.title}</h3>
+                            <div class="badges-row">
+                                <div class="category-badge">${event.category}</div>
+                                <div class="deadline-badge ${status.cls}">${status.label}</div>
+                            </div>
+                        </div>
+
+                        <button class="save-btn ${saved ? "saved" : ""}" onclick="toggleSave(${event.id})" title="${saved ? "Remove from Wishlist" : "Save to Wishlist"}">
+                            ${saved ? "★" : "☆"}
+                        </button>
+                    </div>
+
+                    <div class="event-meta">
+                        <div class="meta-item">📅 ${event.date}</div>
+                        <div class="meta-item">🕐 ${event.time}</div>
+                        <div class="meta-item">📍 ${event.location}</div>
+                        <div class="meta-item" style="color:#AFA89A;font-size:0.9rem;margin-top:0.4rem;">
+                            ⏳ Deadline: ${event.deadline}
+                        </div>
+                    </div>
+
+                    <div class="tags">
+                        ${event.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+
+                    <div class="actions-row">
+                        <select class="reminder-select" onchange="setReminder(${event.id}, this.value)">
+                            <option value="none" ${reminderValue==="none" ? "selected" : ""}>Reminder: None</option>
+                            <option value="1h" ${reminderValue==="1h" ? "selected" : ""}>Remind 1 hour before</option>
+                            <option value="1d" ${reminderValue==="1d" ? "selected" : ""}>Remind 1 day before</option>
+                        </select>
+
+                        <button class="mini-action-btn" onclick="copyEventDetailsById(${event.id})">Share</button>
+                    </div>
+
+                    <button class="view-details-btn" onclick="openModal(${event.id})">View Details</button>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function filterEvents() {
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const club = document.getElementById('clubFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            filteredEvents = events.filter(event => {
+                // Wishlist Filter
+                if(showWishlistOnly && !wishlist.includes(event.id)) return false;
+
+                const matchesSearch =
+                    event.title.toLowerCase().includes(searchTerm) ||
+                    event.description.toLowerCase().includes(searchTerm) ||
+                    event.organizer.toLowerCase().includes(searchTerm) ||
+                    event.category.toLowerCase().includes(searchTerm) ||
+                    event.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+
+                const matchesCategory = category === 'all' || event.category === category;
+                const matchesClub = club === 'all' || event.organizer === club;
+
+                let matchesDate = true;
+                if (currentDateFilter === 'today') {
+                    matchesDate = event.dateObj.toDateString() === today.toDateString();
+                } else if (currentDateFilter === 'week') {
+                    const weekFromNow = new Date(today);
+                    weekFromNow.setDate(today.getDate() + 7);
+                    matchesDate = event.dateObj >= today && event.dateObj <= weekFromNow;
+                } else if (currentDateFilter === 'month') {
+                    const monthFromNow = new Date(today);
+                    monthFromNow.setMonth(today.getMonth() + 1);
+                    matchesDate = event.dateObj >= today && event.dateObj <= monthFromNow;
+                }
+
+                return matchesSearch && matchesCategory && matchesClub && matchesDate;
+            });
+
+            // Sorting
+            if(sortBy === "soonest"){
+                filteredEvents.sort((a,b)=> a.dateObj - b.dateObj);
+            } else if(sortBy === "popular"){
+                filteredEvents.sort((a,b)=> b.popularity - a.popularity);
+            } else if(sortBy === "recent"){
+                filteredEvents.sort((a,b)=> parseDate(b.createdAt) - parseDate(a.createdAt));
+            }
+
+            updateFilterSummary();
+            renderEvents();
+        }
+
+        function updateFilterSummary(){
+            const category = document.getElementById('categoryFilter').value;
+            const club = document.getElementById('clubFilter').value;
+            const dateText =
+                currentDateFilter === "all" ? "All" :
+                currentDateFilter === "today" ? "Today" :
+                currentDateFilter === "week" ? "This Week" : "This Month";
+
+            document.getElementById("filterSummary").textContent = `Filters: ${category} • ${club} • ${dateText}`;
+        }
+
+        let currentModalEventId = null;
+
+        function openModal(id) {
+            const event = events.find(e => e.id === id);
+            currentModalEventId = id;
+
+            document.getElementById('modalTitle').textContent = event.title;
+            document.getElementById('modalOrganizer').textContent = event.organizer;
+            document.getElementById('modalCategory').textContent = event.category;
+
+            const status = getDeadlineStatus(event.deadline);
+            const deadlineBadge = document.getElementById("modalDeadlineBadge");
+            deadlineBadge.textContent = status.label;
+            deadlineBadge.className = `deadline-badge ${status.cls}`;
+
+            document.getElementById('modalMeta').innerHTML = `
+                <div>📅 ${event.date}</div>
+                <div>🕐 ${event.time}</div>
+                <div>📍 ${event.location}</div>
+                <div style="margin-top:0.5rem;color:#AFA89A;">⏳ Deadline: ${event.deadline}</div>
+            `;
+            document.getElementById('modalDescription').textContent = event.description;
+            document.getElementById('modalTags').innerHTML = event.tags.map(tag =>
+                `<span class="tag">${tag}</span>`
+            ).join('');
+
+            // Save button status in modal
+            const modalSaveBtn = document.getElementById("modalSaveBtn");
+            const saved = wishlist.includes(event.id);
+            modalSaveBtn.textContent = saved ? "★" : "☆";
+            modalSaveBtn.className = `save-btn ${saved ? "saved" : ""}`;
+
+            // Calendar links
+            document.getElementById("gcalBtn").href = buildGoogleCalendarUrl(event);
+
+            // Attach actions
+            document.getElementById("icsBtn").onclick = () => downloadICS(event);
+            document.getElementById("copyBtn").onclick = () => copyEventDetails(event);
+
+            document.getElementById("registerBtn").onclick = () => {
+                alert("Register feature is UI-only ✅ (Frontend Prototype)");
+            };
+
+            document.getElementById('eventModal').classList.add('active');
+        }
+
+        function copyEventDetailsById(id){
+            const event = events.find(e=> e.id === id);
+            copyEventDetails(event);
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').classList.remove('active');
+        }
+
+        // Modal save button
+        document.getElementById("modalSaveBtn").addEventListener("click", () => {
+            if(currentModalEventId) toggleSave(currentModalEventId);
+            // refresh icon immediately
+            const saved = wishlist.includes(currentModalEventId);
+            const modalSaveBtn = document.getElementById("modalSaveBtn");
+            modalSaveBtn.textContent = saved ? "★" : "☆";
+            modalSaveBtn.className = `save-btn ${saved ? "saved" : ""}`;
+        });
+
+        // Inputs events
+        document.getElementById('searchBar').addEventListener('input', filterEvents);
+        document.getElementById('categoryFilter').addEventListener('change', filterEvents);
+        document.getElementById('clubFilter').addEventListener('change', filterEvents);
+        document.getElementById('sortFilter').addEventListener('change', filterEvents);
+
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentDateFilter = this.dataset.filter;
+                filterEvents();
+            });
+        });
+
+        document.getElementById('eventModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Wishlist toggle buttons
+        const allBtn = document.getElementById("allBtn");
+        const wishBtn = document.getElementById("wishBtn");
+
+        allBtn.addEventListener("click", () => {
+            showWishlistOnly = false;
+            allBtn.classList.add("active");
+            wishBtn.classList.remove("active");
+            filterEvents();
+        });
+
+        wishBtn.addEventListener("click", () => {
+            showWishlistOnly = true;
+            wishBtn.classList.add("active");
+            allBtn.classList.remove("active");
+            filterEvents();
+        });
+
+        // Initial render
+        updateWishlistCount();
+        updateFeaturedBanner();
+        updateFilterSummary();
+        filterEvents();
+    </script>
+</body>
+</html>
